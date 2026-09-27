@@ -1,0 +1,296 @@
+<?xml version="1.0" ?>
+<!--
+  Adapted from jonathanrandall/autonomous_robot_gardener
+  (ros_ws/src/xarm_description/urdf/xarm_v2.urdf)
+-->
+<robot name="xarm">
+
+    <material name="DarkGrey">
+        <color rgba="0.3 0.3 0.3 1.0" />
+    </material>
+    <material name="Red">
+        <color rgba="0.3 0.3 0.3 1.0" />
+    </material>
+    <material name="Black">
+        <color rgba="0 0 0 1.0" />
+    </material>
+    <material name="Orange">
+        <color rgba="0.0 0.15 0.7 1.0" />
+    </material>
+    <material name="Silver">
+        <color rgba="1.0 1.0 1.0 1.0" />
+    </material>
+    <material name="Grey">
+        <color rgba="0.7 0.7 0.7 1.0" />
+    </material>
+    <material name="Blue">
+        <color rgba="0.0 0.0 0.8 1.0" />
+    </material>
+    <material name="HandGray">
+        <color rgba="0.953 0.996 0.694 1.0" />
+    </material>
+    <material name="SickBlue">
+        <color rgba="0.3058 0.5921 0.7294 1.0" />
+    </material>
+
+    <link name="xarm_base_link">
+        <visual>
+            <origin rpy="0 0 0" xyz="0.0 0.0 0.0" />
+            <geometry>
+                <mesh filename="meshes/base.stl" scale="1.0 1.0 1.0" />
+            </geometry>
+            <material name="Blue" />
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0" />
+            <geometry>
+                <mesh filename="meshes/base.stl" scale="1.0 1.0 1.0" />
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="1" />
+            <inertia ixx="0.03" iyy="0.03" izz="0.03" ixy="0.0" ixz="0.0" iyz="0.0" />
+        </inertial>
+    </link>
+
+    <link name="xarm_6_link">
+        <visual>
+            <origin rpy="0 0 3.14159265358979" xyz="0.0 0.0 0.0" />
+            <geometry>
+                <mesh filename="meshes/link6.stl" scale="1.0 1.0 1.0" />
+            </geometry>
+            <material name="DarkGrey" />
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0.0 0.0 0.0" />
+            <geometry>
+                <mesh filename="meshes/link6.stl" scale="1.0 1.0 1.0" />
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="0.1" />
+            <inertia ixx="0.03" iyy="0.03" izz="0.03" ixy="0.0" ixz="0.0" iyz="0.0" />
+        </inertial>
+    </link>
+
+    <link name="xarm_5_link">
+        <visual>
+            <origin rpy="0 0 0" xyz="0.0 0.0 0.0" />
+            <geometry>
+                <mesh filename="meshes/link5.stl" scale="1.0 1.0 1.0" />
+            </geometry>
+            <material name="Blue" />
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0.0 0.0 0.0" />
+            <geometry>
+                <mesh filename="meshes/link5.stl" scale="1.0 1.0 1.0" />
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="0.1" />
+            <inertia ixx="0.03" iyy="0.03" izz="0.03" ixy="0.0" ixz="0.0" iyz="0.0" />
+        </inertial>
+    </link>
+
+    <link name="xarm_4_link">
+        <visual>
+            <origin rpy="0 0 0" xyz="0.0 0.0 0.0" />
+            <geometry>
+                <mesh filename="meshes/link4.stl" scale="1.0 1.0 1.0" />
+            </geometry>
+            <material name="DarkGrey" />
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0.0 0.0 0.0" />
+            <geometry>
+                <mesh filename="meshes/link4.stl" scale="1.0 1.0 1.0" />
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="0.1" />
+            <inertia ixx="0.03" iyy="0.03" izz="0.03" ixy="0.0" ixz="0.0" iyz="0.0" />
+        </inertial>
+    </link>
+
+    <link name="xarm_3_link">
+        <visual>
+            <origin rpy="0 0 3.14" xyz="0.0 0.0 0.0" />
+            <geometry>
+                <mesh filename="meshes/link3.stl" scale="1.0 1.0 1.0" />
+            </geometry>
+            <material name="Blue" />
+        </visual>
+        <collision>
+            <origin rpy="0 0 3.14" xyz="0.0 0.0 0.0" />
+            <geometry>
+                <mesh filename="meshes/link3.stl" scale="1.0 1.0 1.0" />
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="0.1" />
+            <inertia ixx="0.03" iyy="0.03" izz="0.03" ixy="0.0" ixz="0.0" iyz="0.0" />
+        </inertial>
+    </link>
+
+
+    <link name="eef_base_link">
+        <visual>
+            <origin rpy="0 0 3.14" xyz="0.0 0.0 0.0" />
+            <geometry>
+                <mesh filename="meshes/gripper_palm.stl" scale="1.0 1.0 1.0" />
+            </geometry>
+            <material name="DarkGrey" />
+        </visual>
+        <collision>
+            <origin rpy="0 0 3.14" xyz="0.0 0.0 0.0" />
+            <geometry>
+                <mesh filename="meshes/gripper_palm.stl" scale="1.0 1.0 1.0" />
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="0.1" />
+            <inertia ixx="0.03" iyy="0.03" izz="0.03" ixy="0.0" ixz="0.0" iyz="0.0" />
+        </inertial>
+    </link>
+    
+
+    <link name="eef_2_finger_left_link">
+        <visual>
+            <origin rpy="0 0 0" xyz="0.0 0.0 0.0" />
+            <geometry>
+                <mesh filename="meshes/gripper_finger_left.stl" scale="1.0 1.0 1.0" />
+            </geometry>
+            <material name="DarkGrey" />
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0.0 0.0 0.0" />
+            <geometry>
+                <mesh filename="meshes/gripper_finger_left.stl" scale="1.0 1.0 1.0" />
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="0.1" />
+            <inertia ixx="0.03" iyy="0.03" izz="0.03" ixy="0.0" ixz="0.0" iyz="0.0" />
+        </inertial>
+    </link>
+
+        <!-- mirror here -->
+
+    <!-- <xacro:if value="$(arg sim_mode)"> -->
+   
+    <link name="eef_2_finger_right_link">
+        <visual>
+            <origin rpy="0 0 0" xyz="0.0 0.0 0.0" />
+            <geometry>
+                <mesh filename="meshes/gripper_finger_right.stl" scale="1.0 1.0 1.0" />
+            </geometry>
+            <material name="DarkGrey" />
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0.0 0.0 0.0" />
+            <geometry>
+                <mesh filename="meshes/gripper_finger_right.stl" scale="1.0 1.0 1.0" />
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="0.1" />
+            <inertia ixx="0.03" iyy="0.03" izz="0.03" ixy="0.0" ixz="0.0" iyz="0.0" />
+        </inertial>
+    </link>
+   
+    
+
+
+    <joint name="xarm_6_joint" type="revolute">
+        <origin rpy="0 0 1.5708" xyz="0 0.0 0.03603" />
+        <axis xyz="0 0 1" />
+        <limit effort="1000" lower="-2.181662" upper="2.181662" velocity="1.0" />
+        <!--safety_controller k_position="30" k_velocity="30" soft_lower_limit="-2.93215314335" soft_upper_limit="2.93215314335"/>
+        <dynamics damping="1.0"/-->
+        <parent link="xarm_base_link" />
+        <child link="xarm_6_link" />
+    </joint>
+
+    <joint name="xarm_5_joint" type="revolute">
+        <origin rpy="-0.08 0 0" xyz="0 -0.0022 0.03195" />
+        <axis xyz="1 0 0" />
+        <limit effort="1000" lower="-2.181662" upper="2.181662" velocity="1.0" />
+        <!--safety_controller k_position="30" k_velocity="30" soft_lower_limit="-2.93215314335" soft_upper_limit="2.93215314335"/>
+        <dynamics damping="1.0"/-->
+        <parent link="xarm_6_link" />
+        <child link="xarm_5_link" />
+    </joint>
+
+    <joint name="xarm_4_joint" type="revolute">
+        <!-- origin rpy="0 0 0" xyz="0 0.0 0.09765" /-->
+        <origin rpy="0 0 0" xyz="0 0.0 0.097" />
+        <axis xyz="-1 0 0" />
+        <limit effort="1000" lower="-2.181662" upper="2.181662" velocity="1.0" />
+        <!--safety_controller k_position="30" k_velocity="30" soft_lower_limit="-2.93215314335" soft_upper_limit="2.93215314335"/>
+        <dynamics damping="1.0"/-->
+        <parent link="xarm_5_link" />
+        <child link="xarm_4_link" />
+    </joint>
+
+
+    <joint name="xarm_3_joint" type="revolute">
+        <origin rpy="0 0 0" xyz="0 0.0 0.095" />
+        <!-- <origin rpy="0 0 0" xyz="0 0.0 0.030" /> -->
+        <axis xyz="1 0 0" />
+        <limit effort="1000" lower="-2.181662" upper="2.05" velocity="1.0" />
+        <!--safety_controller k_position="30" k_velocity="30" soft_lower_limit="-2.93215314335" soft_upper_limit="2.93215314335"/>
+        <dynamics damping="1.0"/-->
+        <parent link="xarm_4_link" />
+        <!-- <parent link="xarm_7_link" /> -->
+        <child link="xarm_3_link" />
+    </joint>
+
+    <joint name="xarm_2_joint" type="revolute">
+        <origin rpy="0 0 0" xyz="0 -0.001205 0.05306" />
+        <axis xyz="0 0 1" />
+        <limit effort="1000" lower="-2.181662" upper="2.181662" velocity="1.0" />
+        <!--safety_controller k_position="30" k_velocity="30" soft_lower_limit="-2.93215314335" soft_upper_limit="2.93215314335"/>
+        <dynamics damping="1.0"/-->
+        <parent link="xarm_3_link" />
+
+        <child link="eef_base_link" />
+                
+    </joint>
+
+<!-- 0.75 to -1.832 0.003 0.028 -->
+    
+    <joint name="xarm_1_joint" type="prismatic">
+        <origin rpy="0 0 0" xyz="0 0 0.050"/>
+        <axis xyz="1 0 0" />
+        <limit effort="1000.0" lower="0.00" upper="0.028" velocity="0.5"/>
+        <parent link="eef_base_link"/>
+        <child link="eef_2_finger_left_link"/>
+    </joint>
+
+    <link name="finger_pinch_link"/>
+
+    <joint name="finger_pinch_joint" type="fixed">
+      <origin xyz="0 0 0.13" rpy="0 0 0"/>
+      <parent link="eef_base_link"/>
+      <child link="finger_pinch_link"/>
+    </joint>
+
+        <!-- mirror here -->
+
+        <!-- <xacro:if value="$(arg sim_mode)"> -->
+        
+    <joint name="xarm_1_joint_mirror" type="prismatic">
+        <origin rpy="0 0 0" xyz="0 0 0.050"/>
+        <axis xyz="1 0 0" />
+        <limit effort="1000.0" lower="0.003" upper="0.028" velocity="0.5"/>
+        <parent link="eef_base_link"/>
+        <child link="eef_2_finger_right_link"/>
+        <mimic multiplier="-1.0" joint="xarm_1_joint" />
+    </joint>
+    
+
+
+    
+
+</robot>
