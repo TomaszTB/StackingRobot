@@ -1,23 +1,8 @@
-"""Hardware-mapping constants for the Hiwonder xArm 1S.
+"""Hardware constants for the Hiwonder xArm 1S.
 
-Link lengths and joint axes/limits come from the reference URDF at
-xarm_ik/urdf/xarm_v2.urdf (see kinematics.py), sourced from
-https://github.com/jonathanrandall/autonomous_robot_gardener.
-
-This module only adds what the URDF can't: each joint's Hiwonder servo ID
-and that servo's raw position <-> angle conversion.
-
-SERVO MAPPING: 6=base yaw, 5=shoulder pitch, 4=elbow pitch, 3=wrist pitch,
-2=wrist roll, 1=gripper, per the URDF's own joint naming -- verify on
-your unit by moving one servo ID at a time.
-
-`signs` flips servos wired opposite the URDF's <axis> convention;
-confirmed needed for base_yaw (servo 6), which rotates opposite the
-simulated model.
-
-JOINT LIMITS: pulled from the loaded URDF chain (kinematics.build_chain),
-re-capped here at the servo bus's +/-125 deg hard ceiling as a defensive
-backstop in case the URDF is ever swapped for one that exceeds it.
+Link lengths and joint limits come from xarm_ik/urdf/xarm_v2.urdf (from
+https://github.com/jonathanrandall/autonomous_robot_gardener); this adds each
+joint's servo ID, its mounting direction, and the raw position <-> angle mapping.
 """
 
 import math
@@ -25,96 +10,108 @@ from dataclasses import dataclass
 
 from .kinematics import ACTIVE_LINKS_MASK, build_chain
 
+# The servo bus's hard ceiling; caps the URDF's limits in case it ever exceeds them.
 HARDWARE_LIMIT_DEG = 125.0
+
+# Raw positions: 500 is a joint's zero, 0/1000 its own lower/upper limit_deg.
+SERVO_POSITION_CENTER = 500
+SERVO_POSITION_MIN = 0
+SERVO_POSITION_MAX = 1000
+
+# IK results can overshoot a limit by float noise; clamp within this, reject beyond.
+JOINT_LIMIT_EPSILON_DEG = 1e-4
 
 
 @dataclass(frozen=True)
 class JointConfig:
     name: str
-    servo_ids: tuple
-    limit_deg: tuple
-    signs: tuple = (1,)
+    servo_id: int
+    limit_deg: tuple  # (lower, upper) of the true (URDF) angle
+    sign: int = 1  # -1: servo mounted opposite the URDF axis
+
+    @property
+    def _servo_limit_deg(self) -> tuple:
+        """limit_deg in the servo's own direction (mirrored if sign flips it)."""
+        lower_deg, upper_deg = self.limit_deg
+        return self.limit_deg if self.sign > 0 else (-upper_deg, -lower_deg)
+
+    def to_position(self, angle_deg: float) -> int:
+        """Raw servo position for a joint angle; ValueError outside limit_deg."""
+        lower_deg, upper_deg = self.limit_deg
+        if not lower_deg - JOINT_LIMIT_EPSILON_DEG <= angle_deg <= upper_deg + JOINT_LIMIT_EPSILON_DEG:
+            raise ValueError(f"{self.name} angle {angle_deg:.1f} deg is outside its limits {self.limit_deg}.")
+        servo_deg = self.sign * max(lower_deg, min(upper_deg, angle_deg))
+        servo_lower, servo_upper = self._servo_limit_deg
+        span_deg, span_position = (
+            (servo_upper, SERVO_POSITION_MAX - SERVO_POSITION_CENTER)
+            if servo_deg >= 0
+            else (servo_lower, SERVO_POSITION_MIN - SERVO_POSITION_CENTER)
+        )
+        position = SERVO_POSITION_CENTER + (servo_deg / span_deg if span_deg else 0.0) * span_position
+        return int(round(max(SERVO_POSITION_MIN, min(SERVO_POSITION_MAX, position))))
+
+    def to_angle_deg(self, position: float) -> float:
+        """Inverse of to_position (past a limit maps beyond it, unclamped)."""
+        servo_lower, servo_upper = self._servo_limit_deg
+        offset = position - SERVO_POSITION_CENTER
+        if offset >= 0:
+            servo_deg = offset / (SERVO_POSITION_MAX - SERVO_POSITION_CENTER) * servo_upper
+        else:
+            servo_deg = offset / (SERVO_POSITION_MIN - SERVO_POSITION_CENTER) * servo_lower
+        return self.sign * servo_deg
 
 
-def _capped_limit_deg(chain, active_link_index: int) -> tuple:
-    """The chain link's own bounds (radians), in degrees, capped at the
-    servo bus's +/-125 degree hardware ceiling.
-    """
-    lower_rad, upper_rad = chain.links[active_link_index].bounds
-    lower_deg, upper_deg = math.degrees(lower_rad), math.degrees(upper_rad)
-    return (max(lower_deg, -HARDWARE_LIMIT_DEG), min(upper_deg, HARDWARE_LIMIT_DEG))
+# Chain index of each active joint, base to wrist.
+ACTIVE_LINK_INDICES = tuple(i for i, active in enumerate(ACTIVE_LINKS_MASK) if active)
+
+
+def _limit_deg(chain, link_index: int) -> tuple:
+    lower_rad, upper_rad = chain.links[link_index].bounds
+    return (max(math.degrees(lower_rad), -HARDWARE_LIMIT_DEG), min(math.degrees(upper_rad), HARDWARE_LIMIT_DEG))
 
 
 _chain = build_chain()
-# Index of each active (non-fixed) chain link, base-to-wrist (where
-# ACTIVE_LINKS_MASK is True). Public so callers map config.JOINTS entries
-# to chain indices without hardcoding the chain's layout.
-ACTIVE_LINK_INDICES = tuple(i for i, active in enumerate(ACTIVE_LINKS_MASK) if active)
-
-# --- Kinematic joints, base to wrist, in chain order. ---
-JOINTS = (
-    JointConfig(name="base_yaw", servo_ids=(6,), limit_deg=_capped_limit_deg(_chain, ACTIVE_LINK_INDICES[0]), signs=(1,)),
-    JointConfig(name="shoulder_pitch", servo_ids=(5,), limit_deg=_capped_limit_deg(_chain, ACTIVE_LINK_INDICES[1]), signs=(1,)),
-    JointConfig(name="elbow_pitch", servo_ids=(4,), limit_deg=_capped_limit_deg(_chain, ACTIVE_LINK_INDICES[2]), signs=(-1,)),
-    JointConfig(name="wrist_pitch", servo_ids=(3,), limit_deg=_capped_limit_deg(_chain, ACTIVE_LINK_INDICES[3]), signs=(-1,)),
-    JointConfig(name="wrist_roll", servo_ids=(2,), limit_deg=_capped_limit_deg(_chain, ACTIVE_LINK_INDICES[4]), signs=(1,)),
+# Base to wrist, in chain order. Base yaw's sign was confirmed on hardware.
+JOINTS = tuple(
+    JointConfig(name, servo_id, _limit_deg(_chain, link_index), sign)
+    for (name, servo_id, sign), link_index in zip(
+        [("base_yaw", 6, 1), ("shoulder_pitch", 5, 1), ("elbow_pitch", 4, -1), ("wrist_pitch", 3, -1), ("wrist_roll", 2, 1)],
+        ACTIVE_LINK_INDICES,
+    )
 )
 
 GRIPPER_SERVO_ID = 1
 GRIPPER_OPEN_POS = 0
 GRIPPER_CLOSED_POS = 1000
 
-# Position 500 = the joint's zero angle; 0/1000 map to that joint's own
-# limit_deg (not a fixed +/-125 deg scale), since each servo is limited to
-# its own usable range -- so the same raw position differs per joint.
-SERVO_POSITION_CENTER = 500
-SERVO_POSITION_MIN = 0
-SERVO_POSITION_MAX = 1000
-
-# Reject an IK solution whose forward kinematics misses the requested point
-# by more than this much -- almost always means the target is out of reach.
+# Max IK miss (m) before a target counts as unreachable.
 IK_POSITION_TOLERANCE_M = 0.01
 
-# Max spacing (m) between move_to_pose's intermediate waypoints, so the
-# tip traces a straight line -- servos interpolate joint *angles*
-# linearly, which traces an arc in Cartesian space, not a line.
+# Max spacing (m) of linear moves' IK waypoints, so the tip traces a line, not a joint-space arc.
 LINEAR_MOVE_STEP_M = 0.01
 
-# Floor on each waypoint's duration, however small LINEAR_MOVE_STEP_M
-# would otherwise call for -- below this a step is too brief for the
-# servo bus to act on before the next command arrives.
-MIN_STEP_DURATION_MS = 100
-
-# Cap on scipy's function evals per intermediate waypoint (move_to_pose)
-# -- these land roughly on the line from a nearby seed, so ikpy's default
-# budget is overkill; the final (real target) waypoint stays uncapped.
+# Intermediate waypoints only: cap scipy evals per solve (they start near the
+# answer), and bias each toward the last one's branch (cut a ~218 deg elbow
+# flip to ~9 deg; not monotonic, so re-sweep if retuning).
 LINEAR_STEP_OPTIMIZER_BUDGET = 100
-
-# Regularization for intermediate waypoints only, biasing each solve to
-# match the last one's branch (e.g. avoids an elbow-up/down flip); cut one
-# reproduced ~218 deg flip to ~9 deg. Not monotonic -- re-sweep if retuning.
 LINEAR_STEP_REGULARIZATION = 0.005
 
-# Solutions near a joint's hard limit can overshoot it by floating-point
-# noise alone (e.g. a best-effort solve with a loose/infinite tolerance).
-# Clamp overshoots within this margin; anything past it is a real error.
-JOINT_LIMIT_EPSILON_DEG = 1e-4
+# A tick starting later than this counts as late.
+TICK_LATE_SLACK_S = 0.010
 
+# Closed loop: nudge a joint only once its tracking error changes less than
+# this per tick (it has stopped catching up); each nudge lasts SETTLE_NUDGE_S
+# (at most a tick); the total nudge per joint is capped, so a blocked joint
+# isn't pushed hard.
+SETTLE_STEADY_DEG = 0.5
+SETTLE_NUDGE_S = 0.1
+SETTLE_MAX_CORRECTION_DEG = 5.0
 
-def angle_deg_to_position(angle_deg: float, limit_deg: tuple) -> int:
-    lower_deg, upper_deg = limit_deg
-    if angle_deg < lower_deg - JOINT_LIMIT_EPSILON_DEG or angle_deg > upper_deg + JOINT_LIMIT_EPSILON_DEG:
-        raise ValueError(
-            f"Joint angle {angle_deg:.1f} deg is outside its configured "
-            f"limits {limit_deg}."
-        )
-    angle_deg = max(lower_deg, min(upper_deg, angle_deg))
+# Single-servo read: healthy replies take 6-24 ms, so 30 ms only cuts off real
+# failures; a tick budgets 25 ms per read when fitting another one in.
+FEEDBACK_READ_TIMEOUT_MS = 30
+FEEDBACK_READ_BUDGET_MS = 25
 
-    if angle_deg >= 0:
-        span_deg, span_position = upper_deg, SERVO_POSITION_MAX - SERVO_POSITION_CENTER
-    else:
-        span_deg, span_position = lower_deg, SERVO_POSITION_MIN - SERVO_POSITION_CENTER
-
-    fraction = (angle_deg / span_deg) if span_deg != 0 else 0.0
-    position = SERVO_POSITION_CENTER + fraction * span_position
-    return int(round(max(SERVO_POSITION_MIN, min(SERVO_POSITION_MAX, position))))
+# Min wait after a read reply or command before the next command: the board
+# drops commands sent within ~5 ms of a reply (stress tests).
+COMMAND_GAP_MS = 20

@@ -31,43 +31,17 @@ def main():
 
     arm = GripperPoseController(com_port=args.com_port, dry_run=not args.execute)
     view = PybulletArmView() if args.sim else None
+    on_tick = view.mirror_tick if view else None
 
-    def mirror():
-        if view:
-            view.animate_to(arm.get_joint_angles_deg(), arm.get_gripper_open_fraction(), duration_s=MOTION_DURATION_MS / 1000)
+    for label, step in (("Homing", arm.home), ("Opening gripper", arm.open_gripper), ("Closing gripper", arm.close_gripper), ("Homing", arm.home)):
+        print(f"{label}...")
+        step(duration_ms=MOTION_DURATION_MS, on_tick=on_tick)
 
-    print("Homing...")
-    arm.home(duration_ms=MOTION_DURATION_MS, wait=True)
-    mirror()
-
-    print("Opening gripper...")
-    arm.open_gripper(duration_ms=MOTION_DURATION_MS, wait=True)
-    mirror()
-
-    print("Closing gripper...")
-    arm.close_gripper(duration_ms=MOTION_DURATION_MS, wait=True)
-    mirror()
-
-    print("Homing...")
-    arm.home(duration_ms=MOTION_DURATION_MS, wait=True)
-    mirror()
-
-    joints_by_servo_id = sorted(config.JOINTS, key=lambda joint: joint.servo_ids[0])
-    for joint in joints_by_servo_id:
+    for joint in sorted(config.JOINTS, key=lambda joint: joint.servo_id):
         lower_deg, upper_deg = joint.limit_deg
-        servo_id = joint.servo_ids[0]
-
-        print(f"{joint.name} (servo {servo_id}): moving to lower limit ({lower_deg:.0f} deg)")
-        arm.move_joint(joint.name, lower_deg, duration_ms=MOTION_DURATION_MS, wait=True)
-        mirror()
-
-        print(f"{joint.name} (servo {servo_id}): moving to upper limit ({upper_deg:.0f} deg)")
-        arm.move_joint(joint.name, upper_deg, duration_ms=MOTION_DURATION_MS, wait=True)
-        mirror()
-
-        print(f"{joint.name} (servo {servo_id}): returning to 0 deg")
-        arm.move_joint(joint.name, 0.0, duration_ms=MOTION_DURATION_MS, wait=True)
-        mirror()
+        for label, angle_deg in (("lower limit", lower_deg), ("upper limit", upper_deg), ("zero", 0.0)):
+            print(f"{joint.name} (servo {joint.servo_id}): moving to {label} ({angle_deg:.0f} deg)")
+            arm.move_joint(joint.name, angle_deg, duration_ms=MOTION_DURATION_MS, on_tick=on_tick)
 
     print("Done.")
     if view:

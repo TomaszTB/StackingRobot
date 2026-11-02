@@ -1,0 +1,222 @@
+Run,base time ms,Upstack Pass/Fail,Downstack Pass/Fail,Fail Action,Failure Reason
+wood 1,1000,pass,fail,Block 3 pickup,Gripper missed block
+wood 2,1000,pass,pass,,
+wood 3,1000,pass,pass,,
+wood 4,1000,fail,N/A,Block 2 pickup,Gripper missed block
+wood 5,1000,pass,pass,,
+wood 6,1000,pass,pass,,
+wood 7,1000,pass,pass,,
+wood 8,1000,fail,N/A,Block 5 pickup,Gripper missed block
+wood 9,1000,pass,pass,,
+wood 10,1000,fail,N/A,Block 1 pickup,Gripper missed block
+wood 11,750,fail,N/A,Block 6 pickup,Gripper missed block
+wood 12,750,pass,pass,,
+wood 13,750,pass,pass,,
+wood 14,750,pass,pass,,
+wood 15,750,pass,pass,,
+wood 16,750,pass,pass,,
+wood 17,750,pass,pass,,
+wood 18,750,pass,pass,,
+wood 19,750,pass,pass,,
+wood 20,750,pass,pass,,
+wood 21,500,pass,pass,,
+wood 22,500,pass,pass,,
+wood 23,500,pass,pass,,
+wood 24,500,pass,pass,,
+wood 25,500,pass,pass,,
+wood 26,500,fail,N/A,Block 1 pickup,Gripper missed block
+wood 27,500,pass,pass,,
+wood 28,500,pass,pass,,
+wood 29,500,pass,pass,,
+wood 30,500,pass,pass,,
+wood 31,250,pass,pass,,
+wood 32,250,pass,pass,,
+wood 33,250,pass,pass,,
+wood 34,250,pass,pass,,
+wood 35,250,pass,pass,,
+wood 36,250,fail,N/A,Block 4 placement,"Block 2 placement pushed block 1, leaving too big of a gap for block 4 to be placed correctly"
+wood 37,250,fail,N/A,Block 4 placement,"Block 2 placement pushed block 1, leaving too big of a gap for block 4 to be placed correctly"
+wood 38,250,pass,pass,,
+wood 39,250,pass,pass,,
+wood 40,250,pass,pass,,
+wood 41,125,fail,N/A,Block 2 pickup,Gripper missed block
+wood 42,125,fail,N/A,Block 2 pickup ,Gripper missed block
+wood 43,125,fail,N/A,Block 2 placement,Block 2 placement pushed block 1 off pyramid area
+wood 44,125,fail,N/A,Block 2 placement,Block 2 placement pushed block 1 off pyramid area
+wood 45,125,pass,pass,,
+wood 46,125,fail,N/A,Block 2 pickup,Gripper missed block
+wood 47,125,fail,N/A,Block 2 placement,Block 2 placement pushed block 1 off pyramid area
+wood 48,125,fail,N/A,Block 2 placement,Block 2 placement pushed block 1 off pyramid area
+wood 49,125,pass,pass,,
+wood 50,125,fail,N/A,Block 2 placement,Block 2 placement pushed block 1 off pyramid area
+wood 51,1000,pass,pass,,
+wood 52,1000,pass,pass,,
+wood 53,1000,pass,pass,,
+wood 54,1000,pass,pass,,
+wood 55,1000,pass,pass,,
+wood 56,1000,pass,pass,,
+wood 57,1000,pass,pass,,
+wood 58,1000,pass,pass,,
+wood 59,1000,pass,pass,,
+wood 60,1000,pass,pass,,
+wood 61,750,pass,pass,,
+wood 62,750,pass,pass,,
+wood 63,750,pass,pass,,
+wood 64,750,pass,pass,,
+wood 65,750,pass,pass,,
+wood 66,750,pass,pass,,
+wood 67,750,pass,pass,,
+wood 68,750,pass,pass,,
+wood 69,750,pass,pass,,
+wood 70,750,pass,pass,,
+wood 71,500,fail,N/A,Block 5 placement,"Block 5 placement pushed block 4, destroying the pyramid"
+wood 72,500,pass,pass,,
+wood 73,500,pass,fail,Block 1 placement,Block 1 fell off initial stack when placed
+wood 74,500,pass,pass,,
+wood 75,500,pass,pass,,
+wood 76,500,pass,pass,,
+wood 77,500,pass,pass,,
+wood 78,500,pass,pass,,
+wood 79,500,pass,pass,,
+wood 80,500,fail,N/A,Block 5 placement,"Block 5 placement pushed block 4, destroying the pyramid"
+wood 81,250,fail,N/A,Block 5 placement,"Block 5 placement pushed block 4, destroying the pyramid"
+wood 82,250,fail,N/A,Block 2 placement,Block 2 placement push block 1 off pyramid area
+wood 83,250,fail,N/A,Block 2 placement,Block 2 placement push block 1 off pyramid area
+wood 84,250,fail,N/A,Block 5 placement,"Block 5 placement pushed block 4, destroying the pyramid"
+wood 85,250,fail,N/A,Block 5 placement,"Block 5 placement pushed block 4, destroying the pyramid"
+wood 86,250,fail,N/A,Block 5 placement,"Block 5 placement pushed block 4, destroying the pyramid"
+wood 87,250,fail,N/A,Block 1 placement,Block 1 placement fell outside of pyramid area
+wood 88,250,fail,N/A,Block 5 placement,"Block 5 placement pushed block 4, destroying the pyramid"
+wood 89,250,fail,N/A,Block 1 placement,Block 1 placement fell outside of pyramid area
+wood 90,250,fail,N/A,Block 5 placement,"Block 5 placement pushed block 4, destroying the pyramid"
+wood 91,125,fail,N/A,Block 1 pickup,Gripper missed block
+wood 92,125,fail,N/A,Block 1 pickup,Gripper missed block
+wood 93,125,fail,N/A,Block 1 pickup,Gripper missed block
+wood 94,125,fail,N/A,Block 1 pickup,Gripper missed block
+wood 95,125,fail,N/A,Block 1 pickup,Gripper missed block
+wood 96,125,fail,N/A,Block 1 pickup,Gripper missed block
+wood 97,125,fail,N/A,Block 1 pickup,Gripper missed block
+wood 98,125,fail,N/A,Block 1 pickup,Gripper missed block
+wood 99,125,fail,N/A,Block 1 pickup,Gripper missed block
+wood 100,125,fail,N/A,Block 1 pickup,Gripper missed block
+silicone 101,1000,pass,pass,,
+silicone 102,1000,pass,pass,,
+silicone 103,1000,fail,N/A,Block 6 placement,Block 6 was placed diagonally
+silicone 104,1000,pass,pass,,
+silicone 105,1000,fail,N/A,Block 6 placement,Block 6 was placed diagonally
+silicone 106,1000,pass,pass,,
+silicone 107,1000,pass,fail,Block 1 placement,Block 1 fell off the initial stack 
+silicone 108,1000,pass,pass,,
+silicone 109,1000,fail,N/A,Block 2 placement,Block 2 leaned on block 1
+silicone 110,1000,fail,N/A,Block 3 pickup,Gripper missed block
+silicone 111,750,pass,fail,Block 2 pickup,Block slipped out of gripper
+silicone 112,750,fail,N/A,Block 2 pickup,Gripper missed block
+silicone 113,750,pass,fail,Block 3 pickup,Block slipped out of gripper
+silicone 114,750,pass,pass,,
+silicone 115,750,fail,N/A,Block 3 pickup,Grippr missed block
+silicone 116,750,pass,pass,,
+silicone 117,750,pass,pass,,
+silicone 118,750,pass,pass,,
+silicone 119,750,pass,fail,Block 3 pickup,Gripper missed block
+silicone 120,750,pass,pass,,
+silicone 121,500,pass,pass,,
+silicone 122,500,pass,fail,Block 4 pickup,Gripper missed block
+silicone 123,500,pass,pass,,
+silicone 124,500,pass,fail,Block 2 placement,Block fell off of stack
+silicone 125,500,fail,N/A,Block 4 pickup,Gripper missed block
+silicone 126,500,pass,fail,Block 4 placement,Block fell off of stack
+silicone 127,500,pass,fail,Block 2 placement,Block fell off of stack
+silicone 128,500,pass,pass,,
+silicone 129,500,pass,pass,,
+silicone 130,500,pass,pass,,
+silicone 131,250,fail,N/A,Block 1 transport,Knocked over a stack during transport
+silicone 132,250,fail,N/A,Block 1 transport,Knocked over a stack during transport
+silicone 133,250,pass,fail,Block 2 placement,Block fell off of stack
+silicone 134,250,pass,fail,Block 4 placement,Block fell off of stack
+silicone 135,250,pass,fail,Block 5 placement,Block fell off of stack
+silicone 136,250,pass,fail,Block 5 pickup,Knocked over pyramid during pickup
+silicone 137,250,fail,N/A,Block 4 placement,Block fell off of pyramid
+silicone 138,250,pass,fail,Block 5 placement,Block fell off of stack
+silicone 139,250,pass,fail,Block 4 placement,Block fell off of stack
+silicone 140,250,pass,fail,Block 2 placement,Block fell off of stack
+silicone 141,125,fail,N/A,Block 1 transport,Knocked over a stack during transport
+silicone 142,125,fail,N/A,Block 1 transport,Knocked over a stack during transport
+silicone 143,125,fail,N/A,Block 1 transport,Knocked over a stack during transport
+silicone 144,125,fail,N/A,Block 1 transport,Knocked over a stack during transport
+silicone 145,125,fail,N/A,Block 1 transport,Knocked over a stack during transport
+silicone 146,125,fail,N/A,Block 1 transport,Knocked over a stack during transport
+silicone 147,125,fail,N/A,Block 1 transport,Knocked over a stack during transport
+silicone 148,125,fail,N/A,Block 1 transport,Knocked over a stack during transport
+silicone 149,125,fail,N/A,Block 1 transport,Knocked over a stack during transport
+silicone 150,125,fail,N/A,Block 1 pickup,Knocked over a stack during pickup
+silicone 151,1000,pass,pass,,
+silicone 152,1000,pass,pass,,
+silicone 153,1000,pass,pass,,
+silicone 154,1000,fail,N/A,Block 4 pickup,Gripper missed block
+silicone 155,1000,pass,pass,,
+silicone 156,1000,pass,pass,,
+silicone 157,1000,pass,pass,,
+silicone 158,1000,pass,pass,,
+silicone 159,1000,pass,fail,Block 4 placement,Block fell off of stack
+silicone 160,1000,pass,pass,,
+silicone 161,750,pass,pass,,
+silicone 162,750,pass,pass,,
+silicone 163,750,pass,pass,,
+silicone 164,750,pass,pass,,
+silicone 165,750,pass,fail,Block 4 placement,Block fell off of stack
+silicone 166,750,pass,pass,,
+silicone 167,750,pass,fail,Block 5 placement,Block fell off of stack 
+silicone 168,750,pass,pass,,
+silicone 169,750,pass,fail,Block 4 placement,Block fell off of stack
+silicone 170,750,pass,pass,,
+silicone 171,500,fail,N/A,Block 3 placement,Block placed far from pyramid
+silicone 172,500,pass,fail,Block 1 transport,Block fell out of gripper
+silicone 173,500,pass,pass,,
+silicone 174,500,pass,pass,,
+silicone 175,500,pass,pass,,
+silicone 176,500,pass,pass,,
+silicone 177,500,pass,pass,,
+silicone 178,500,pass,fail,Block 5 placement,Block fell off of stack
+silicone 179,500,pass,fail,Block 5 placement,Block fell off of stack
+silicone 180,500,pass,pass,,
+silicone 181,250,fail,N/A,Block 1 transport,Knocked over a stack during transport
+silicone 182,250,fail,N/A,Block 1 transport,Knocked over a stack during transport
+silicone 183,250,pass,fail,Block 5 placement,Block fell off of stack
+silicone 184,250,fail,N/A,Block 4 placement,Knocked over pyramid
+silicone 185,250,fail,N/A,Block 1 transport,Knocked over a stack during transport
+silicone 186,250,pass,fail,Bloxk 6 pickup,Knocked over pyramid
+silicone 187,250,fail,N/A,Block 1 transport,Knocked over a stack during transport
+silicone 188,250,fail,N/A,Block 1 transport,Knocked over a stack during transport
+silicone 189,250,pass,fail,Block 4 pickup,Gripper missed block
+silicone 190,250,fail,N/A,Block 1 transport,Knocked over a stack during transport
+silicone 191,125,fail,N/A,Block 1 transport,Knocked over a stack during transport
+silicone 192,125,fail,N/A,Block 1 transport,Knocked over a stack during transport
+silicone 193,125,fail,N/A,Block 1 transport,Knocked over a stack during transport
+silicone 194,125,fail,N/A,Block 1 transport,Knocked over a stack during transport
+silicone 195,125,fail,N/A,Block 1 pickup,Gripper missed block
+silicone 196,125,fail,N/A,Block 1 pickup,Gripper missed block
+silicone 197,125,fail,N/A,Block 1 pickup,Gripper missed block
+silicone 198,125,fail,N/A,Block 1 transport,Knocked over a stack during transport
+silicone 199,125,fail,N/A,Block 1 transport,Knocked over a stack during transport
+silicone 200,125,fail,N/A,Block 1 transport,Knocked over a stack during transport
+cup 201,1000,pass,pass,,
+cup 202,1000,pass,fail,Cup 3 pickup,Gripper missed cup
+cup 203,1000,pass,pass,,
+cup 204,1000,pass,pass,,
+cup 205,1000,pass,pass,,
+cup 206,1000,fail,N/A,Cup 5 pickup,Gripper missed cup
+cup 207,1000,pass,fail,Cup 1 pickup,Gripper missed cup
+cup 208,1000,pass,pass,,
+cup 209,1000,pass,pass,,
+cup 210,1000,pass,fail,Cup 1 pickup,Gripper missed cup
+cup 211,750,pass,fail,Cup 2 pickup,Gripper missed cup
+cup 212,750,pass,pass,,
+cup 213,750,fail,N/A,Cup 6 pickup,Gripper missed cup
+cup 214,750,pass,fail,Cup 2 pickup,Gripper missed cup
+cup 215,750,pass,fail,Cup 2 pickup,Gripper missed cup
+cup 216,750,fail,N/A,Cup 4 placement,Cup fell off of pyramid
+cup 217,750,fail,N/A,Cup 1 pickup,Picked up more than 1 cup
+cup 218,750,pass,fail,Cup 1 pickup,Gripper missed cup
+cup 219,750,fail,N/A,Cup 1 pickup,Gripper missed cup
+cup 220,750,fail,N/A,Cup 1 placement,Gripper knocked cup away
+cup 221,500,,,,

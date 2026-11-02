@@ -1,0 +1,44 @@
+material,mode,base_ms,stage,failure_reason,count
+wood,open,125,up,gripper missed block,10
+wood,open,250,up,block 1 placement fell outside of pyramid area,2
+wood,open,250,up,block 2 placement push block 1 off pyramid area,2
+wood,open,250,up,"block 5 placement pushed block 4, destroying the pyramid",6
+wood,open,500,down,block 1 fell off initial stack when placed,1
+wood,open,500,up,"block 5 placement pushed block 4, destroying the pyramid",2
+wood,closed,125,up,block 2 placement pushed block 1 off pyramid area,5
+wood,closed,125,up,gripper missed block,3
+wood,closed,250,up,"block 2 placement pushed block 1, leaving too big of a gap for block 4 to be placed correctly",2
+wood,closed,500,up,gripper missed block,1
+wood,closed,750,up,gripper missed block,1
+wood,closed,1000,down,gripper missed block,1
+wood,closed,1000,up,gripper missed block,3
+silicone,open,125,up,gripper missed block,3
+silicone,open,125,up,knocked over a stack during transport,7
+silicone,open,250,down,block fell off of stack,1
+silicone,open,250,down,gripper missed block,1
+silicone,open,250,down,knocked over pyramid,1
+silicone,open,250,up,knocked over a stack during transport,6
+silicone,open,250,up,knocked over pyramid,1
+silicone,open,500,down,block fell off of stack,2
+silicone,open,500,down,block fell out of gripper,1
+silicone,open,500,up,block placed far from pyramid,1
+silicone,open,750,down,block fell off of stack,3
+silicone,open,1000,down,block fell off of stack,1
+silicone,open,1000,up,gripper missed block,1
+silicone,closed,125,up,knocked over a stack during pickup,1
+silicone,closed,125,up,knocked over a stack during transport,9
+silicone,closed,250,down,block fell off of stack,6
+silicone,closed,250,down,knocked over pyramid during pickup,1
+silicone,closed,250,up,block fell off of pyramid,1
+silicone,closed,250,up,knocked over a stack during transport,2
+silicone,closed,500,down,block fell off of stack,3
+silicone,closed,500,down,gripper missed block,1
+silicone,closed,500,up,gripper missed block,1
+silicone,closed,750,down,block slipped out of gripper,2
+silicone,closed,750,down,gripper missed block,1
+silicone,closed,750,up,gripper missed block,1
+silicone,closed,750,up,grippr missed block,1
+silicone,closed,1000,down,block 1 fell off the initial stack,1
+silicone,closed,1000,up,block 2 leaned on block 1,1
+silicone,closed,1000,up,block 6 was placed diagonally,2
+silicone,closed,1000,up,gripper missed block,1

@@ -1,0 +1,163 @@
+# X, Y, Z, pitch, roll, gripper_close, time_scale, IK tolerance, linear
+# 6 x 5 cm blocks: two stacks of 3 at (+-0.06, -0.23) -> a 3-2-1 pyramid along
+# the X axis at y=0 (all blocks face the base, so none get twisted on placing).
+# Hand heights are tuned on hardware: grips run 2/4/5.5 cm below the center of the
+# top/middle/bottom stack block (the top one 0.5 cm farther out, the bottom one 1 cm nearer the base);
+# releases run 3.5/3/2 cm below the placed center on the bottom/middle/top layer.
+# Each block is set down at its pickup tilt, except the middle/near
+# bottom ones (2/4 deg flatter), which can't reach that spot that steeply.
+# Gripping at 0.4 closed: 0.36 let blocks slip now and then, and much harder
+# makes them shift when let go. The far bottom block is gripped a bit harder, at 0.45.
+# Pyramid blocks sit 1.5 cm apart, so a carried block clears its placed neighbors;
+# the middle/top layer aim 1.5 cm farther out than the pyramid's center, since
+# they land short of where they're aimed (which built a staircase).
+# The bottom/middle layer x aims were then nudged on hardware until the gaps came out even.
+
+# Get into decent initial position
+0.0, -0.2, 0.5, 90.0, 0.0, 0.0, 1.0, inf, 1
+
+# Stack A (x=+0.06) block 1 (top) -> bottom layer, far
+0.06, -0.235, 0.2, 90.0, 0.0, 0.0, 1.0, inf, 1
+0.06, -0.235, 0.105, 70.0, 0.0, 0.0, 1.0, inf, 1
+0.06, -0.235, 0.105, 70.0, 0.0, 0.45, 1.0, inf, 1
+0.06, -0.235, 0.2, 90.0, 0.0, 0.45, 1.0, inf, 1
+-0.26, 0.0, 0.2, 90.0, 0.0, 0.45, 2.0, inf, 1
+-0.26, 0.0, -0.005, 70.0, 0.0, 0.45, 1.0, inf, 1
+-0.26, 0.0, -0.005, 70.0, 0.0, 0.0, 1.0, inf, 1
+-0.26, 0.0, 0.2, 90.0, 0.0, 0.0, 1.0, inf, 1
+
+# Stack A block 2 -> bottom layer, middle
+0.06, -0.23, 0.2, 90.0, 0.0, 0.0, 2.0, inf, 1
+0.06, -0.23, 0.035, 45.0, 0.0, 0.0, 1.0, inf, 1
+0.06, -0.23, 0.035, 45.0, 0.0, 0.4, 1.0, inf, 1
+0.06, -0.23, 0.2, 90.0, 0.0, 0.4, 1.0, inf, 1
+-0.21, 0.0, 0.2, 90.0, 0.0, 0.4, 2.0, inf, 1
+-0.21, 0.0, -0.01, 43.0, 0.0, 0.4, 1.0, inf, 1
+-0.21, 0.0, -0.01, 43.0, 0.0, 0.0, 1.0, inf, 1
+-0.21, 0.0, 0.2, 90.0, 0.0, 0.0, 1.0, inf, 1
+
+# Stack A block 3 (bottom) -> bottom layer, near
+0.06, -0.22, 0.2, 90.0, 0.0, 0.0, 2.0, inf, 1
+0.06, -0.22, -0.03, 35.0, 0.0, 0.0, 1.0, inf, 1
+0.06, -0.22, -0.03, 35.0, 0.0, 0.4, 1.0, inf, 1
+0.06, -0.22, 0.2, 90.0, 0.0, 0.4, 1.0, inf, 1
+-0.145, 0.0, 0.2, 90.0, 0.0, 0.4, 2.0, inf, 1
+-0.145, 0.0, -0.015, 31.0, 0.0, 0.4, 1.0, inf, 1
+-0.145, 0.0, -0.015, 31.0, 0.0, 0.0, 1.0, inf, 1
+-0.145, 0.0, 0.2, 90.0, 0.0, 0.0, 1.0, inf, 1
+# Via point: straight from x=-0.14 to stack B flips the arm over the top
+-0.2, -0.1, 0.2, 90.0, 0.0, 0.0, 1.0, inf, 1
+
+# Stack B (x=-0.06) block 1 (top) -> middle layer, far
+-0.06, -0.235, 0.2, 90.0, 0.0, 0.0, 1.5, inf, 1
+# 1.5 cm lower than stack A's top grip: higher, the gripper sometimes grazed over it
+-0.06, -0.235, 0.09, 65.0, 0.0, 0.0, 1.0, inf, 1
+-0.06, -0.235, 0.09, 65.0, 0.0, 0.4, 1.0, inf, 1
+-0.06, -0.235, 0.2, 90.0, 0.0, 0.4, 1.0, inf, 1
+-0.2475, 0.0, 0.2, 90.0, 0.0, 0.4, 2.0, inf, 1
+# Same release height as the other middle-layer block: 0.5 cm lower (as it's held
+# 1.5 cm lower down on it) set the gripper down too low
+-0.2475, 0.0, 0.045, 65.0, 0.0, 0.4, 1.0, inf, 1
+-0.2475, 0.0, 0.045, 65.0, 0.0, 0.0, 1.0, inf, 1
+-0.2475, 0.0, 0.2, 90.0, 0.0, 0.0, 1.0, inf, 1
+
+# Stack B block 2 -> middle layer, near
+-0.06, -0.23, 0.2, 90.0, 0.0, 0.0, 2.0, inf, 1
+-0.06, -0.23, 0.035, 45.0, 0.0, 0.0, 1.0, inf, 1
+-0.06, -0.23, 0.035, 45.0, 0.0, 0.4, 1.0, inf, 1
+-0.06, -0.23, 0.2, 90.0, 0.0, 0.4, 1.0, inf, 1
+-0.1925, 0.0, 0.2, 90.0, 0.0, 0.4, 2.0, inf, 1
+-0.1925, 0.0, 0.045, 45.0, 0.0, 0.4, 1.0, inf, 1
+-0.1925, 0.0, 0.045, 45.0, 0.0, 0.0, 1.0, inf, 1
+-0.1925, 0.0, 0.2, 90.0, 0.0, 0.0, 1.0, inf, 1
+
+# Stack B block 3 (bottom) -> top
+-0.06, -0.22, 0.2, 90.0, 0.0, 0.0, 2.0, inf, 1
+# Gripped at the pyramid top's 48 deg so the block's held the same way both ends (35 deg
+# here left it falling into place up there); 4 cm below center, as 2.5 cm missed it
+-0.06, -0.22, -0.015, 48.0, 0.0, 0.0, 1.0, inf, 1
+-0.06, -0.22, -0.015, 48.0, 0.0, 0.4, 1.0, inf, 1
+-0.06, -0.22, 0.2, 90.0, 0.0, 0.4, 1.0, inf, 1
+-0.215, 0.0, 0.2, 90.0, 0.0, 0.4, 2.0, inf, 1
+-0.215, 0.0, 0.105, 48.0, 0.0, 0.4, 1.0, inf, 1
+-0.215, 0.0, 0.105, 48.0, 0.0, 0.0, 1.0, inf, 1
+-0.215, 0.0, 0.2, 90.0, 0.0, 0.0, 1.0, inf, 1
+
+# Move to home
+0.0, 0.0, 0.5, 180.0, 0.0, 0.5, 2.0, inf, 1
+
+# --- Down-stack: the up-stack in reverse, putting each block back about where it was
+# gripped so the stacks end up as they began. Pyramid pickups run 0-1.5 cm below where
+# each block was released (they fall a bit when let go), tuned per block on hardware;
+# the near bottom one is picked up 4 deg flatter, as it can't reach that low that steeply.
+# Away from home toward the pyramid, so the base needn't turn to the stack and back
+-0.2, 0.0, 0.5, 90.0, 0.0, 0.0, 1.0, inf, 1
+
+# Top -> stack B block 3 (bottom)
+-0.215, 0.0, 0.2, 90.0, 0.0, 0.0, 1.5, inf, 1
+-0.215, 0.0, 0.09, 48.0, 0.0, 0.0, 1.0, inf, 1
+-0.215, 0.0, 0.09, 48.0, 0.0, 0.4, 1.0, inf, 1
+-0.215, 0.0, 0.2, 90.0, 0.0, 0.4, 1.0, inf, 1
+-0.06, -0.22, 0.2, 90.0, 0.0, 0.4, 2.0, inf, 1
+-0.06, -0.22, -0.015, 48.0, 0.0, 0.4, 1.0, inf, 1
+-0.06, -0.22, -0.015, 48.0, 0.0, 0.0, 1.0, inf, 1
+-0.06, -0.22, 0.2, 90.0, 0.0, 0.0, 1.0, inf, 1
+
+# Middle layer, near -> stack B block 2
+-0.1925, 0.0, 0.2, 90.0, 0.0, 0.0, 2.0, inf, 1
+-0.1925, 0.0, 0.03, 45.0, 0.0, 0.0, 1.0, inf, 1
+-0.1925, 0.0, 0.03, 45.0, 0.0, 0.4, 1.0, inf, 1
+-0.1925, 0.0, 0.2, 90.0, 0.0, 0.4, 1.0, inf, 1
+-0.06, -0.23, 0.2, 90.0, 0.0, 0.4, 2.0, inf, 1
+-0.06, -0.23, 0.035, 45.0, 0.0, 0.4, 1.0, inf, 1
+-0.06, -0.23, 0.035, 45.0, 0.0, 0.0, 1.0, inf, 1
+-0.06, -0.23, 0.2, 90.0, 0.0, 0.0, 1.0, inf, 1
+
+# Middle layer, far -> stack B block 1 (top)
+-0.2475, 0.0, 0.2, 90.0, 0.0, 0.0, 2.0, inf, 1
+-0.2475, 0.0, 0.04, 65.0, 0.0, 0.0, 1.0, inf, 1
+-0.2475, 0.0, 0.04, 65.0, 0.0, 0.4, 1.0, inf, 1
+-0.2475, 0.0, 0.2, 90.0, 0.0, 0.4, 1.0, inf, 1
+-0.06, -0.235, 0.2, 90.0, 0.0, 0.4, 2.0, inf, 1
+# 0.5 cm below where this block was gripped, or it lands slightly high
+-0.06, -0.235, 0.1, 65.0, 0.0, 0.4, 1.0, inf, 1
+-0.06, -0.235, 0.1, 65.0, 0.0, 0.0, 1.0, inf, 1
+-0.06, -0.235, 0.2, 90.0, 0.0, 0.0, 1.0, inf, 1
+# Via point, as on the way up: going straight from stack B to x=-0.135 may flip the arm
+-0.2, -0.1, 0.2, 90.0, 0.0, 0.0, 1.0, inf, 1
+
+# Bottom layer, near -> stack A block 3 (bottom)
+-0.145, 0.0, 0.2, 90.0, 0.0, 0.0, 1.0, inf, 1
+-0.145, 0.0, -0.02, 27.0, 0.0, 0.0, 1.0, inf, 1
+-0.145, 0.0, -0.02, 27.0, 0.0, 0.4, 1.0, inf, 1
+-0.145, 0.0, 0.2, 90.0, 0.0, 0.4, 1.0, inf, 1
+# Same via point the other way: straight to stack A also flips the arm over the top
+-0.2, -0.1, 0.2, 90.0, 0.0, 0.4, 1.0, inf, 1
+0.06, -0.22, 0.2, 90.0, 0.0, 0.4, 2.0, inf, 1
+0.06, -0.22, -0.03, 35.0, 0.0, 0.4, 1.0, inf, 1
+0.06, -0.22, -0.03, 35.0, 0.0, 0.0, 1.0, inf, 1
+0.06, -0.22, 0.2, 90.0, 0.0, 0.0, 1.0, inf, 1
+
+# Bottom layer, middle -> stack A block 2
+-0.21, 0.0, 0.2, 90.0, 0.0, 0.0, 2.0, inf, 1
+-0.21, 0.0, -0.02, 43.0, 0.0, 0.0, 1.0, inf, 1
+-0.21, 0.0, -0.02, 43.0, 0.0, 0.4, 1.0, inf, 1
+-0.21, 0.0, 0.2, 90.0, 0.0, 0.4, 1.0, inf, 1
+0.06, -0.23, 0.2, 90.0, 0.0, 0.4, 2.0, inf, 1
+0.06, -0.23, 0.035, 45.0, 0.0, 0.4, 1.0, inf, 1
+0.06, -0.23, 0.035, 45.0, 0.0, 0.0, 1.0, inf, 1
+0.06, -0.23, 0.2, 90.0, 0.0, 0.0, 1.0, inf, 1
+
+# Bottom layer, far -> stack A block 1 (top)
+-0.26, 0.0, 0.2, 90.0, 0.0, 0.0, 2.0, inf, 1
+-0.26, 0.0, -0.02, 70.0, 0.0, 0.0, 1.0, inf, 1
+-0.26, 0.0, -0.02, 70.0, 0.0, 0.45, 1.0, inf, 1
+-0.26, 0.0, 0.2, 90.0, 0.0, 0.45, 1.0, inf, 1
+0.06, -0.235, 0.2, 90.0, 0.0, 0.45, 2.0, inf, 1
+# 1 cm below where this block was gripped, or it lands slightly high
+0.06, -0.235, 0.095, 70.0, 0.0, 0.45, 1.0, inf, 1
+0.06, -0.235, 0.095, 70.0, 0.0, 0.0, 1.0, inf, 1
+0.06, -0.235, 0.2, 90.0, 0.0, 0.0, 1.0, inf, 1
+
+# Move to home
+0.0, 0.0, 0.5, 180.0, 0.0, 0.5, 2.0, inf, 1
