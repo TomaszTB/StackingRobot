@@ -4,6 +4,9 @@ Each row: x, y, z, tilt_deg, roll_deg, gripper_close, time_scale, tolerance_m, l
   x, y, z        target tip position (m), base frame (see controller.py)
   tilt_deg       lean from straight down (0) toward (x, y); 90 = horizontal.
                  Blank/"any": unconstrained (frees 2 joints, reaches more)
+                 "auto": the tilt in 0..100 that best reaches the target
+                 from the previous row's pose (least miss, then least
+                 joint travel), solved in closed form
   roll_deg       wrist roll (jaw orientation). Blank/"any": unchanged
   gripper_close  0.0 open .. 1.0 closed
   time_scale     duration as a multiple of --base-time-ms (default 1000)
@@ -21,7 +24,8 @@ Each row runs at --rate-hz (a command, then single-joint reads, per tick);
 time_s, row (0 = homing), joint, expected_deg and measured_deg (blank = failed).
 run<N>_events.csv has a `move` per row (duration, settling included); closed
 loop adds a `settle` per row (count = corrections) and a `correction` per nudge
-(until the next one or settled); last, `sequence` totals rows 1+.
+(until the next one or settled); last, `sequence` totals rows 1+. Every row
+also gets a `tilt` (detail: requested=<deg|any|auto> [chosen=<deg>] achieved=<deg>).
 
 Usage:
     uv run python scripts/run_csv.py waypoints.csv             # dry run (safe)
@@ -37,10 +41,10 @@ import csv
 import math
 import re
 import sys
-import time
 from pathlib import Path
 
 from xarm_ik import GripperPoseController
+from xarm_ik.feedback_log import FeedbackLog
 from xarm_ik.sim import PybulletArmView
 
 
@@ -61,76 +65,6 @@ def tilt_deg_of(approach: tuple) -> float:
     return math.degrees(math.acos(max(-1.0, min(1.0, -az))))
 
 
-class FeedbackLog:
-    """The controller's on_feedback: writes each joint read, tagged with `row`
-    (set it per row), and timings to <stem>_events.csv (see log_move).
-    """
-
-    def __init__(self, path):
-        self.events_path = path.with_name(f"{path.stem}_events.csv")
-        self._file = open(path, "x", newline="")  # never overwrite an earlier run
-        self._events_file = open(self.events_path, "x", newline="")
-        self._writer = csv.writer(self._file)
-        self._writer.writerow(["time_s", "row", "joint", "expected_deg", "measured_deg"])
-        self._events = csv.writer(self._events_file)
-        self._events.writerow(["event", "row", "line", "start_s", "duration_s", "count", "detail"])
-        self._start_s = time.perf_counter()
-        self.row = 0
-        self._sequence_start_s = self._sequence_end_s = None
-        self._closed_loop = False
-        self._corrections = 0
-        self._correction_s = 0.0  # first nudge to settled, summed over rows
-        self._settle_s = 0.0
-
-    def _event(self, event, row, line, start_s, duration_s, count="", detail=""):
-        self._events.writerow([event, row, line, f"{start_s - self._start_s:.4f}", f"{duration_s:.4f}", count, detail])
-
-    def log_move(self, row, line, planned_ms, timing):
-        """Log a row's `move`, and closed loop its `settle` and `correction`s.
-        Row 0 (homing) is left out of the `sequence` totals.
-        """
-        self._event("move", row, line, timing.start_s, timing.end_s - timing.start_s, detail=f"planned {planned_ms} ms")
-        if timing.settled is not None:
-            self._closed_loop = True
-            settle_s = timing.end_s - timing.motion_end_s
-            result = "settled" if timing.settled else "timed out"
-            self._event("settle", row, line, timing.motion_end_s, settle_s, len(timing.corrections), result)
-            ends = [t for t, _ in timing.corrections[1:]] + [timing.end_s]
-            for (t, joints), end_s in zip(timing.corrections, ends):
-                self._event("correction", row, line, t, end_s - t, detail=" ".join(joints))
-            if row:
-                self._corrections += len(timing.corrections)
-                self._settle_s += settle_s
-                if timing.corrections:
-                    self._correction_s += timing.end_s - timing.corrections[0][0]
-        if row:
-            if self._sequence_start_s is None:
-                self._sequence_start_s = timing.start_s
-            self._sequence_end_s = timing.end_s
-
-    def __call__(self, joint_name, sample):
-        measured = "" if sample.measured_deg is None else f"{sample.measured_deg:.2f}"
-        self._writer.writerow(
-            [f"{sample.time_s - self._start_s:.4f}", self.row, joint_name, f"{sample.expected_deg:.2f}", measured]
-        )
-
-    def close(self):
-        """Write the `sequence` event (rows 1+) and close; returns it as text."""
-        summary = "no rows run"
-        if self._sequence_start_s is not None:
-            total_s = self._sequence_end_s - self._sequence_start_s
-            summary = f"sequence took {total_s:.2f} s"
-            if self._closed_loop:
-                detail = f"correcting {self._correction_s:.3f} s, settling {self._settle_s:.3f} s"
-                self._event("sequence", "", "", self._sequence_start_s, total_s, self._corrections, detail)
-                summary += f", {self._corrections} correction(s) over {self._correction_s:.2f} s, {self._settle_s:.2f} s settling"
-            else:
-                self._event("sequence", "", "", self._sequence_start_s, total_s)
-        self._file.close()
-        self._events_file.close()
-        return summary
-
-
 LOG_DIR = Path(__file__).resolve().parent.parent / "logs"
 
 
@@ -143,11 +77,17 @@ def next_log_path(prefix: str = "") -> Path:
 
 
 _UNSPECIFIED = {"", "any", "none"}
+AUTO_TILT = "auto"
 
 
 def _parse_optional_float(value: str):
     """None for blank/"any"/"none", else the float ("inf" included)."""
     return None if value.strip().lower() in _UNSPECIFIED else float(value)
+
+
+def _parse_tilt(value: str):
+    """None (free), AUTO_TILT, or degrees."""
+    return AUTO_TILT if value.strip().lower() == AUTO_TILT else _parse_optional_float(value)
 
 
 def _parse_linear(value: str) -> bool:
@@ -175,7 +115,7 @@ def read_waypoints(path):
             x_str, y_str, z_str, tilt_str, roll_str, gripper_str, time_scale_str, tolerance_str, linear_str = row
             try:
                 x, y, z = float(x_str), float(y_str), float(z_str)
-                tilt_deg = _parse_optional_float(tilt_str)
+                tilt_deg = _parse_tilt(tilt_str)
                 roll_deg = _parse_optional_float(roll_str)
                 gripper_close, time_scale = float(gripper_str), float(time_scale_str)
                 tolerance_m = _parse_optional_float(tolerance_str)
@@ -321,7 +261,7 @@ def main():
             log.row = row_num
         duration_ms = max(1, int(round(time_scale * args.base_time_ms)))
         open_fraction = 1.0 - gripper_close
-        tilt_desc = "unconstrained tilt" if tilt_deg is None else f"tilt={tilt_deg:.0f} deg"
+        tilt_desc = {None: "unconstrained tilt", AUTO_TILT: "auto tilt"}.get(tilt_deg) or f"tilt={tilt_deg:.0f} deg"
         roll_desc = "roll unchanged" if roll_deg is None else f"roll={roll_deg:.0f} deg"
         tolerance_desc = "default tolerance" if tolerance_m is None else f"tolerance={tolerance_m * 1000:g} mm"
         print(
@@ -329,7 +269,7 @@ def main():
             f"{tilt_desc}, {roll_desc}, {tolerance_desc}, {'linear' if linear else 'joint-space'}, "
             f"gripper={open_fraction * 100:.0f}% open, over {duration_ms} ms"
         )
-        approach = None if tilt_deg is None else approach_vector(x, y, tilt_deg)
+        approach = tilt_deg if tilt_deg in (None, AUTO_TILT) else approach_vector(x, y, tilt_deg)
         try:
             arm.move_to_pose(
                 x, y, z,
@@ -347,6 +287,9 @@ def main():
         if log:
             log.log_move(row_num, line_num, duration_ms, arm.last_move)
 
+        if tilt_deg == AUTO_TILT:
+            plan = arm.last_tilt_plan
+            print(f"    Auto tilt chose {plan.tilt_deg:.2f} deg (miss {plan.error_m * 1000:.1f} mm, joint travel {plan.travel_deg:.1f} deg)")
         achieved_x, achieved_y, achieved_z = arm.get_pose()
         achieved_tilt_deg = tilt_deg_of(arm.get_approach_vector())
         achieved_roll_deg = arm.get_joint_angles_deg()["wrist_roll"]
@@ -356,6 +299,12 @@ def main():
             f"tilt={achieved_tilt_deg:.1f} deg, roll={achieved_roll_deg:.1f} deg, "
             f"error={error_m * 1000:.1f} mm"
         )
+        if log:
+            if tilt_deg == AUTO_TILT:
+                requested = f"requested=auto chosen={arm.last_tilt_plan.tilt_deg:.2f}"
+            else:
+                requested = f"requested={'any' if tilt_deg is None else f'{tilt_deg:g}'}"
+            log.log_tilt(row_num, line_num, f"{requested} achieved={achieved_tilt_deg:.2f}")
         if args.closed_loop:
             commanded, measured = arm.get_joint_angles_deg(), arm.get_measured_joint_angles_deg()
             print(

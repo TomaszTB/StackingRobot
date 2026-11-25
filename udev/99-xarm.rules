@@ -1,0 +1,14 @@
+# Hiwonder xArm 1S controller board (USB HID, 0483:5750): readable and writable
+# by the plugdev group and the logged-in user, every time it (re)connects, so
+# no chmod is needed. The `hid` package talks to it through libusb, i.e. the
+# raw USB node (/dev/bus/usb/BBB/DDD, a new DDD on every reconnect); the
+# hidraw line covers hidapi's other backend.
+#
+# Install:
+#   sudo cp udev/99-xarm.rules /etc/udev/rules.d/
+#   sudo udevadm control --reload-rules && sudo udevadm trigger
+SUBSYSTEM=="usb", ATTRS{idVendor}=="0483", ATTRS{idProduct}=="5750", MODE="0660", GROUP="plugdev", TAG+="uaccess"
+KERNEL=="hidraw*", ATTRS{idVendor}=="0483", ATTRS{idProduct}=="5750", MODE="0660", GROUP="plugdev", TAG+="uaccess"
+
+# Keep the port out of USB autosuspend (a suspended port can drop the board).
+ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="0483", ATTR{idProduct}=="5750", TEST=="power/control", ATTR{power/control}="on"

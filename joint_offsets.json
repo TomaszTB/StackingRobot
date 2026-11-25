@@ -1,0 +1,55 @@
+{
+  "zero_offsets_deg": {
+    "base_yaw": 0.0,
+    "shoulder_pitch": 3.018,
+    "elbow_pitch": -3.008,
+    "wrist_pitch": -3.621,
+    "wrist_roll": 0.0
+  },
+  "corrections_deg": {
+    "shoulder_pitch": [
+      -4.025,
+      0.417,
+      2.797
+    ],
+    "elbow_pitch": [
+      -2.454,
+      -0.728,
+      0.88
+    ],
+    "wrist_pitch": [
+      1.507,
+      1.511,
+      -0.244
+    ]
+  },
+  "correction_range_deg": {
+    "shoulder_pitch": [
+      -92.8,
+      81.2
+    ],
+    "elbow_pitch": [
+      -47.8,
+      124.8
+    ],
+    "wrist_pitch": [
+      -125.0,
+      53.6
+    ]
+  },
+  "note": "true joint angle = nominal + offset + sum_k c_k (nominal / 90 deg)^k, k = 1.. (xarm_ik/config.py); fitted by scripts/hand_eye_calibration.py",
+  "board_surface_z_m": -0.003,
+  "sessions": [
+    "logs/calibration/handeye_20261120_170608",
+    "logs/calibration/handeye_20261122_124319",
+    "logs/calibration/handeye_20261123_180809",
+    "logs/calibration/handeye_20261124_145220",
+    "logs/calibration/handeye_20261124_152946",
+    "logs/calibration/handeye_20261125_121619",
+    "logs/calibration/handeye_20261125_131547"
+  ],
+  "touches": [
+    "logs/calibration/tiptouch_20261122_140316",
+    "logs/calibration/tiptouch_20261124_133032"
+  ]
+}

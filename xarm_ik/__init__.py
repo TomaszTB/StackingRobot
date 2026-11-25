@@ -1,3 +1,3 @@
-from .controller import GripperPoseController
+from .controller import ArmDisconnected, GripperPoseController, TiltPlan
 
-__all__ = ["GripperPoseController"]
+__all__ = ["ArmDisconnected", "GripperPoseController", "TiltPlan"]

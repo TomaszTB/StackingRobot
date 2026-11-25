@@ -1,0 +1,37 @@
+{
+  "image_size": [
+    1280,
+    720
+  ],
+  "camera_matrix": [
+    [
+      990.204942508081,
+      0.0,
+      616.3085357231396
+    ],
+    [
+      0.0,
+      991.3365141171874,
+      343.0718051056113
+    ],
+    [
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "distortion": [
+    -0.08220529279518804,
+    0.22229132992020942,
+    -0.0012383460167394804,
+    -0.0005803424329132633,
+    -0.35175329020833335
+  ],
+  "rms_px": 0.3074987160670969,
+  "views": 189,
+  "source": [
+    "logs/calibration/handeye_20261120_170608",
+    "logs/calibration/handeye_20261122_124319"
+  ],
+  "note": "refit from hand-eye calibration board views (scripts/hand_eye_calibration.py --refit-intrinsics)"
+}
